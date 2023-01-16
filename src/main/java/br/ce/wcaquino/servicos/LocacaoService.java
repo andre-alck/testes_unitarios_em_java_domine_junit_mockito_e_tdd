@@ -6,6 +6,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
+import br.ce.wcaquino.daos.LocacaoDao;
 import br.ce.wcaquino.entidades.Filme;
 import br.ce.wcaquino.entidades.Locacao;
 import br.ce.wcaquino.entidades.Usuario;
@@ -14,6 +15,29 @@ import br.ce.wcaquino.exceptions.LocadoraException;
 import br.ce.wcaquino.utils.DataUtils;
 
 public class LocacaoService {
+
+	private LocacaoDao dao;
+	private SpcService spcService;
+	private EmailService emailService;
+
+	public void setLocacaoDao(LocacaoDao dao) {
+		this.dao = dao;
+	}
+
+	public void setSpcService(SpcService spcService) {
+		this.spcService = spcService;
+	}
+
+	public void setEmailService(EmailService emailService) {
+		this.emailService = emailService;
+	}
+
+	public void notificarAtrasos() {
+		List<Locacao> locacoes = dao.obterLocacoesPendentes();
+		for (Locacao locacao : locacoes) {
+			emailService.notificarAtraso(locacao.getUsuario());
+		}
+	}
 
 	public Locacao alugarFilme(Usuario usuario, List<Filme> filmes) throws FilmeSemEstoqueException, LocadoraException {
 
@@ -29,6 +53,10 @@ public class LocacaoService {
 			if (filmes.get(i).getEstoque() == 0) {
 				throw new FilmeSemEstoqueException();
 			}
+		}
+
+		if (spcService.possuiNegativacao(usuario)) {
+			throw new LocadoraException("Usuário está negativado.");
 		}
 
 		Locacao locacao = new Locacao();
@@ -66,7 +94,7 @@ public class LocacaoService {
 		}
 
 		// Salvando a locacao...
-		// TODO adicionar método para salvar
+		dao.salvar(locacao);
 
 		return locacao;
 	}
