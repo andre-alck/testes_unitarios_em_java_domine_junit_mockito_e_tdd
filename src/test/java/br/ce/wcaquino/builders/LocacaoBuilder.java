@@ -1,6 +1,8 @@
 package br.ce.wcaquino.builders;
 
 import br.ce.wcaquino.entidades.Usuario;
+import br.ce.wcaquino.utils.DataUtils;
+
 import java.util.Arrays;
 import java.lang.Double;
 import java.util.Date;
@@ -58,5 +60,11 @@ public class LocacaoBuilder {
 
     public Locacao agora() {
         return elemento;
+    }
+
+    public LocacaoBuilder atrasada() {
+        elemento.setDataLocacao(DataUtils.obterDataComDiferencaDias(-4));
+        elemento.setDataRetorno(DataUtils.obterDataComDiferencaDias(-2));
+        return this;
     }
 }

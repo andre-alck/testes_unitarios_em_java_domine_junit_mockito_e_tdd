@@ -3,9 +3,10 @@ package br.ce.wcaquino.entidades;
 public class Usuario {
 
 	private String nome;
-	
-	public Usuario() {}
-	
+
+	public Usuario() {
+	}
+
 	public Usuario(String nome) {
 		this.nome = nome;
 	}
@@ -16,5 +17,10 @@ public class Usuario {
 
 	public void setNome(String nome) {
 		this.nome = nome;
+	}
+
+	@Override
+	public String toString() {
+		return "Usuário [nome = " + nome + "]";
 	}
 }

@@ -1,11 +1,12 @@
 package br.ce.wcaquino.servicos;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.is;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.equalTo;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -13,7 +14,9 @@ import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import org.junit.runners.Parameterized.Parameter;
 import org.junit.runners.Parameterized.Parameters;
-import org.mockito.Mockito;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import br.ce.wcaquino.daos.LocacaoDao;
 import br.ce.wcaquino.entidades.Filme;
@@ -34,19 +37,18 @@ public class CalculoValorLocacaoTest {
     @Parameter(value = 2)
     public String descricao;
 
+    @InjectMocks
     private LocacaoService locacaoService;
+
+    @Mock
     private LocacaoDao locacaoDao;
+
+    @Mock
     private SpcService spcService;
 
     @Before
     public void setup() {
-        locacaoService = new LocacaoService();
-
-        locacaoDao = Mockito.mock(LocacaoDao.class);
-        locacaoService.setLocacaoDao(locacaoDao);
-
-        spcService = Mockito.mock(SpcService.class);
-        locacaoService.setSpcService(spcService);
+        MockitoAnnotations.openMocks(this);
     }
 
     private static Filme primeiroFilme = new Filme("Filme 1", 1, 100.0);
